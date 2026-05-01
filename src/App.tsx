@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 function App() {
   const [inputText, setInputText] = useState('')
@@ -11,47 +15,55 @@ function App() {
     }
   }
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSubmit()
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
-          Message Test
-        </h1>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <Card className="w-full max-w-md shadow-xl border-none">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold text-center text-slate-800">
+            Message Test
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent>
+          <div className="flex gap-2 mb-6">
+            <Input
+              type="text"
+              value={inputText}
+              onChange={(e) => {
+                setInputText(e.target.value)
+              }}
+              onKeyDown={handleKeyDown}
+              placeholder="Enter your message..."
+              className="focus-visible:ring-blue-500"
+            />
+            <Button onClick={handleSubmit} className="h-9 px-4 py-2">
+              Send
+            </Button>
+          </div>
 
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Enter your message..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          />
-          <button
-            onClick={handleSubmit}
-            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
-          >
-            Send
-          </button>
-        </div>
-
-        <div className="space-y-3 max-h-96 overflow-y-auto">
-          {messages.map((message, index) => (
-            <div key={index} className="flex justify-end">
-              <div className="bg-blue-500 text-white px-4 py-2 rounded-lg max-w-xs relative">
-                {message}
-                <div className="absolute top-1/2 right-0 transform translate-x-1/2 -translate-y-1/2 rotate-45 w-2 h-2 bg-blue-500"></div>
-              </div>
+          <ScrollArea className="h-87.5 pr-4">
+            <div className="space-y-4">
+              {messages.map((message, index) => (
+                <div key={index} className="flex justify-end animate-in fade-in slide-in-from-right-2">
+                  <div className="bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-tr-none shadow-sm max-w-[80%] wrap-break-words relative">
+                    {message}
+                    <div className="absolute -top-px -right-1.25 w-3 h-3 bg-blue-600 [clip-path:polygon(0_0,100%_0,0_100%)]"></div>
+                  </div>
+                </div>
+              ))}
+              {messages.length === 0 && (
+                <p className="text-center text-slate-400 text-sm py-10">No messages yet.</p>
+              )}
             </div>
-          ))}
-        </div>
-      </div>
+          </ScrollArea>
+        </CardContent>
+      </Card>
     </div>
   )
 }
